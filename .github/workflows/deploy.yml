@@ -3,7 +3,7 @@ name: Deploy EC2 Instance
 on:
   push:
     branches:
-      - Complete-CI/CD-with-Terraform-AWS
+      - main # Trigger on pushes to the main branch
 
 env:
   AWS_REGION: us-east-1
