@@ -45,7 +45,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 resource "aws_security_group" "maingroup" {
   name        = "deployer-sg"
   description = "Security group for deployer instance"
-  vpc_id      = "vpc-028b1a033958b5b0f" # Replace with your actual VPC ID
+  vpc_id      = "vpc-012c818e861291e1c" # Replace with your actual VPC ID
 
   egress {
     from_port   = 0
