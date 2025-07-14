@@ -37,12 +37,30 @@ jobs:
         with:
           terraform_version: 1.5.0
 
-      - name: Verify S3 bucket exists
+      - name: Debug and verify S3 bucket
         run: |
-          if aws s3api head-bucket --bucket "$TF_STATE_BUCKET_NAME" 2>/dev/null; then
+          echo "🔍 Debugging bucket configuration..."
+          echo "Bucket name length: ${#TF_STATE_BUCKET_NAME}"
+          echo "AWS Region: $AWS_REGION"
+          
+          # Check if bucket name is not empty
+          if [ -z "$TF_STATE_BUCKET_NAME" ]; then
+            echo "❌ TF_STATE_BUCKET_NAME is empty"
+            exit 1
+          fi
+          
+          echo "🔍 Attempting to access bucket: $TF_STATE_BUCKET_NAME"
+          
+          # Try to get bucket location first
+          if aws s3api get-bucket-location --bucket "$TF_STATE_BUCKET_NAME" 2>/dev/null; then
             echo "✅ S3 bucket $TF_STATE_BUCKET_NAME exists and is accessible"
           else
-            echo "❌ S3 bucket $TF_STATE_BUCKET_NAME does not exist or is not accessible"
+            echo "❌ Failed to access bucket. Checking detailed error..."
+            aws s3api head-bucket --bucket "$TF_STATE_BUCKET_NAME" || true
+            
+            # List buckets to verify access
+            echo "🔍 Available buckets:"
+            aws s3api list-buckets --query 'Buckets[].Name' --output table || true
             exit 1
           fi
 
