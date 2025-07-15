@@ -1,0 +1,3 @@
+Create a docker image and push it to ecrLogin to ECR
+Login with SSH to EC2 and deploy the docker image by pulling it from ECR
+Deploy the image to the EC2 instance  
