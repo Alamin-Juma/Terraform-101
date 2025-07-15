@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "user-uploads-prodalamin"
+    bucket = "alaminawsbuc23"
     key    = "aws/ec2-deployment/terraform.tfstate"
     region = "us-east-1"
   }
