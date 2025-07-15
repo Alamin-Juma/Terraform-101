@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "alaminawsbuc23"
+    bucket = "alamin-aws-bucket-23"
     key    = "aws/ec2-deployment/terraform.tfstate"
     region = "us-east-1"
   }
@@ -84,26 +84,4 @@ resource "aws_key_pair" "deployer" {
 output "instance_public_ip" {
   value     = aws_instance.server.public_ip
   sensitive = true
-}
-
-variable "region" {
-  description = "AWS region to deploy resources"
-  type        = string
-  default     = "us-east-1"
-}
-
-variable "key_name" {
-  description = "Name of the AWS key pair"
-  type        = string
-}
-
-variable "public_key" {
-  description = "Public key for AWS key pair"
-  type        = string
-}
-
-variable "private_key" {
-  description = "Private key for SSH connection"
-  type        = string
-  sensitive   = true
 }
