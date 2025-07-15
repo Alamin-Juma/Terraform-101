@@ -25,5 +25,5 @@ This project demonstrates the deployment of an EC2 instance with a Node.js appli
 - Implement HTTPS using a load balancer or reverse proxy.
 - Enhance security with stricter IAM policies and VPC configurations.
 
-## Acknowledgements
-Thanks to the xAI community and AWS documentation for guidance throughout this journey!
+
+<img width="748" height="280" alt="image" src="https://github.com/user-attachments/assets/77ce3b49-595f-4316-a48f-cda117cc8e0c" />
