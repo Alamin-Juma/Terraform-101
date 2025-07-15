@@ -97,10 +97,16 @@ jobs:
           script: |
             sudo apt-get update
             sudo apt-get install -y docker.io awscli
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo usermod -aG docker ubuntu
             aws ecr get-login-password --region $AWS_DEFAULT_REGION | sudo docker login --username AWS --password-stdin $REGISTRY
             sudo docker stop myappcontainer || true
             sudo docker rm myappcontainer || true
             sudo docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
-            sudo docker run -d --name myappcontainer -p 80:3000 $REGISTRY/$REPOSITORY:$IMAGE_TAG
+            sudo docker run -d --name myappcontainer -p 80:8080 $REGISTRY/$REPOSITORY:$IMAGE_TAG
+            sleep 5
+            sudo docker ps
+            sudo docker logs myappcontainer
             echo "Application deployed successfully!"
             echo "Server public IP: ${{ needs.deploy-infra.outputs.SERVER_PUBLIC_IP }}"
