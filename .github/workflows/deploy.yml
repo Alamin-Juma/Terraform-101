@@ -89,18 +89,34 @@ jobs:
           REPOSITORY: example-node-app
           IMAGE_TAG: ${{ github.sha }}
           AWS_DEFAULT_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           host: ${{ needs.deploy-infra.outputs.SERVER_PUBLIC_IP }}
           username: ubuntu
           key: ${{ secrets.AWS_SSH_KEY_PRIVATE }}
-          envs: REGISTRY,REPOSITORY,IMAGE_TAG,AWS_DEFAULT_REGION
+          envs: REGISTRY,REPOSITORY,IMAGE_TAG,AWS_DEFAULT_REGION,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
           script: |
             sudo apt-get update
             sudo apt-get install -y docker.io awscli
-            sudo ${aws ecr get-login --no-include-email --region us-east-1}
+            
+            # Configure AWS credentials
+            sudo mkdir -p /root/.aws
+            echo "[default]" | sudo tee /root/.aws/credentials
+            echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" | sudo tee -a /root/.aws/credentials
+            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" | sudo tee -a /root/.aws/credentials
+            echo "region=$AWS_DEFAULT_REGION" | sudo tee -a /root/.aws/credentials
+            
+            # Login to ECR using the modern method
+            sudo aws ecr get-login-password --region $AWS_DEFAULT_REGION | sudo docker login --username AWS --password-stdin $REGISTRY
+            
+            # Stop and remove existing container
             sudo docker stop myappcontainer || true
             sudo docker rm myappcontainer || true
+            
+            # Pull and run new container
             sudo docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
             sudo docker run -d --name myappcontainer -p 80:8080 $REGISTRY/$REPOSITORY:$IMAGE_TAG
+            
             echo "Application deployed successfully!"
             echo "Server public IP: ${{ needs.deploy-infra.outputs.SERVER_PUBLIC_IP }}"
