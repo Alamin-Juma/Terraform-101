@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "alamin-aws-bucket-23"
+    bucket = "alamin-aws-bt-terra22"
     key    = "aws/ec2-deployment/terraform.tfstate"
     region = "us-east-1"
   }
@@ -89,7 +89,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 resource "aws_security_group" "maingroup" {
   name        = "deployer-sg"
   description = "Security group for deployer instance"
-  vpc_id      = "vpc-0a0e2f21dac671587"
+  vpc_id      = "vpc-030ca1516829436bc"
 
   egress {
     from_port   = 0
