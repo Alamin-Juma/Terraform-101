@@ -17,7 +17,7 @@ provider "aws" {
   region = var.region
 }
 
-# ECR Repository for Docker images
+# ECR Repository for Docker images management
 resource "aws_ecr_repository" "app_repo" {
   name                 = "example-node-app"
   image_tag_mutability = "MUTABLE"
